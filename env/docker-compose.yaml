@@ -1,0 +1,27 @@
+version: '3'
+services:
+  postgresql-db:
+    container_name: postgresql-db
+    image: postgres:16-alpine
+    hostname: ${DB_SERVER_HOST}
+    ports:
+      - "${DB_SERVER_EXTERNAL_PORT}:${DB_SERVER_INTERNAL_PORT}"
+    environment:
+      POSTGRES_USER: ${DB_SERVER_USERNAME}
+      POSTGRES_PASSWORD: ${DB_SERVER_PASSWORD}
+      POSTGRES_MULTIPLE_DATABASES: ${DB_SERVER_MULTIPLE_DATABASES}
+    healthcheck:
+      test: [ "CMD-SHELL", "sh -c 'pg_isready -U ${DB_SERVER_USERNAME}'" ]
+      timeout: 45s
+      interval: 10s
+      retries: 2
+    restart: always
+    volumes:
+      - "./db-init:/docker-entrypoint-initdb.d"
+      - "postgres_data:${DB_SERVER_DATA_PATH}"
+      - "postgres_backup:${DB_SERVER_BACKUP}"
+    env_file: .env
+
+volumes:
+  postgres_data:
+  postgres_backup:
