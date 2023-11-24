@@ -22,7 +22,8 @@
 		<module>launcher</module>
 		<module>tool-service</module>
 		<module>user-service</module>
-	</modules>
+        <module>file-service</module>
+    </modules>
 
 	<properties>
 		<java.version>17</java.version>

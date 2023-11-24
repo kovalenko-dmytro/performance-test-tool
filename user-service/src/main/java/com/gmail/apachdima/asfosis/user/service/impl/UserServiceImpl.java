@@ -2,7 +2,6 @@ package com.gmail.apachdima.asfosis.user.service.impl;
 
 import com.gmail.apachdima.asfosis.common.constant.message.Error;
 import com.gmail.apachdima.asfosis.common.constant.model.Model;
-import com.gmail.apachdima.asfosis.common.dto.auth.SignUpRequestDTO;
 import com.gmail.apachdima.asfosis.common.dto.user.UpdateUserRequestDTO;
 import com.gmail.apachdima.asfosis.common.dto.user.UserCreateRequestDTO;
 import com.gmail.apachdima.asfosis.common.dto.user.UserResponseDTO;
@@ -54,11 +53,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDTO create(UserCreateRequestDTO userRequestDTO) {
         User user = User.builder()
-            .username(userRequestDTO.getUserName())
-            .password(passwordEncoder.encode(userRequestDTO.getPassword().trim()))
-            .firstName(userRequestDTO.getFirstName().trim())
-            .lastName(userRequestDTO.getLastName().trim())
-            .email(userRequestDTO.getEmail().trim())
+            .username(userRequestDTO.userName())
+            .password(passwordEncoder.encode(userRequestDTO.password().trim()))
+            .firstName(userRequestDTO.firstName().trim())
+            .lastName(userRequestDTO.lastName().trim())
+            .email(userRequestDTO.email().trim())
             .enabled(true)
             .created(LocalDateTime.now())
             .roles(Set.of(roleRepository.findByRole(UserRole.USER).get()))
@@ -69,11 +68,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDTO update(String userId, UpdateUserRequestDTO request, Locale locale) {
         User user = getById(userId, locale);
-        if (StringUtils.isNoneBlank(request.getFirstName())) {
-            user.setFirstName(request.getFirstName());
+        if (StringUtils.isNoneBlank(request.firstName())) {
+            user.setFirstName(request.firstName());
         }
-        if (StringUtils.isNoneBlank(request.getLastName())) {
-            user.setLastName(request.getLastName());
+        if (StringUtils.isNoneBlank(request.lastName())) {
+            user.setLastName(request.lastName());
         }
         return userMapper.toUserResponseDTO(userRepository.save(user));
     }

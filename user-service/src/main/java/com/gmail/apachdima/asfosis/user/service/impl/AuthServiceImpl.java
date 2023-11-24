@@ -13,14 +13,12 @@ import com.gmail.apachdima.asfosis.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
 
 import java.util.Locale;
 import java.util.Objects;
@@ -37,7 +35,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public SignInResponseDTO signIn(SignInRequestDTO request, Locale locale) {
         Authentication authentication = authenticationManager
-            .authenticate(new UsernamePasswordAuthenticationToken(request.getUserName(), request.getPassword()));
+            .authenticate(new UsernamePasswordAuthenticationToken(request.userName(), request.password()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         User authenticatedUser = userService.getByUsername(authentication.getName(), locale);
         String accessToken = jwtService.generateAccessToken(authenticatedUser);

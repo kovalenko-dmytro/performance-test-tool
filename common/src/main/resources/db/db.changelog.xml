@@ -25,4 +25,8 @@
     <changeSet id="db-change-set-5" author="asfosis">
         <sqlFile path="db/sql/2023-02-04-4444_insert_table_roles.sql"/>
     </changeSet>
+
+    <changeSet id="db-change-set-6" author="asfosis">
+        <sqlFile path="db/sql/2023-02-04-5555_create_table_files.sql"/>
+    </changeSet>
 </databaseChangeLog>

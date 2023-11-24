@@ -16,7 +16,13 @@ public enum Error {
     NO_HANDLER_FOUND("error.no.handler.found"),
     HTTP_METHOD_NOT_ALLOWED("error.http.method.not.allowed"),
     MEDIA_TYPE_NOT_SUPPORTED("error.media.type.not.supported"),
+    UNAUTHORISED("error.unauthorised"),
     INTERNAL_SERVER_ERROR_OCCURRED("error.internal.server.error.occurred"),
+    FILE_STORAGE_VENDOR_UNSUPPORTED("error.file.storage.vendor.unsupported"),
+    FILE_STORAGE_CREDENTIALS_NOT_FOUND("error.file.storage.credentials.not.found"),
+    FILE_STORAGE_SERVICE_UNAVAILABLE("error.file.storage.service.unavailable"),
+    FILE_STORAGE_UNABLE_UPLOAD("error.file.storage.unable.upload"),
+    FILE_STORAGE_UNABLE_READ("error.file.storage.unable.read"),
     LOG_CONTROLLER_EXECUTE("error.log.controller.execute");
 
     private final String key;

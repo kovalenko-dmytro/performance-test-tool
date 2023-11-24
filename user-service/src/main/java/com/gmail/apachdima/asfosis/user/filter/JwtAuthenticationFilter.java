@@ -1,11 +1,8 @@
 package com.gmail.apachdima.asfosis.user.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gmail.apachdima.asfosis.common.constant.api.OpenApiAsset;
 import com.gmail.apachdima.asfosis.common.constant.common.CommonConstant;
-import com.gmail.apachdima.asfosis.common.constant.message.Error;
 import com.gmail.apachdima.asfosis.common.dto.RestApiErrorResponseDTO;
-import com.gmail.apachdima.asfosis.common.exception.AuthenticationException;
 import com.gmail.apachdima.asfosis.user.service.JWTService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -18,19 +15,15 @@ import org.springframework.http.MediaType;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Locale;
 import java.util.Objects;
 
 @Component
@@ -79,7 +72,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             RestApiErrorResponseDTO errorResponse = RestApiErrorResponseDTO.builder()
                 .status(HttpStatus.UNAUTHORIZED)
                 .message(e.getMessage())
-                .timestamp(LocalDateTime.now())
+                .timestamp(LocalDateTime.now().toString())
                 .build();
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);

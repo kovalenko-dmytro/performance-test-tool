@@ -10,15 +10,18 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
         "com.gmail.apachdima.asfosis.launcher",
         "com.gmail.apachdima.asfosis.common",
         "com.gmail.apachdima.asfosis.tool",
-        "com.gmail.apachdima.asfosis.user"
+        "com.gmail.apachdima.asfosis.user",
+        "com.gmail.apachdima.asfosis.file.storage"
     })
 @EnableJpaRepositories(basePackages = {
     "com.gmail.apachdima.asfosis.tool",
-    "com.gmail.apachdima.asfosis.user"
+    "com.gmail.apachdima.asfosis.user",
+    "com.gmail.apachdima.asfosis.file.storage"
 })
 @EntityScan(basePackages = {
     "com.gmail.apachdima.asfosis.tool",
-    "com.gmail.apachdima.asfosis.user"
+    "com.gmail.apachdima.asfosis.user",
+    "com.gmail.apachdima.asfosis.file.storage"
 })
 public class AsfosisApplication {
 

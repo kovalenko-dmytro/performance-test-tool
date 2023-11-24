@@ -3,6 +3,7 @@ package com.gmail.apachdima.asfosis.common.handler;
 import com.gmail.apachdima.asfosis.common.constant.common.CommonConstant;
 import com.gmail.apachdima.asfosis.common.constant.message.Error;
 import com.gmail.apachdima.asfosis.common.dto.RestApiErrorResponseDTO;
+import com.gmail.apachdima.asfosis.common.exception.AFSApplicationException;
 import com.gmail.apachdima.asfosis.common.exception.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,6 +101,13 @@ public class RestApiExceptionHandler extends ResponseEntityExceptionHandler {
         return createResponseEntity(responseDTO);
     }
 
+    @ExceptionHandler({AFSApplicationException.class})
+    public ResponseEntity<Object> handleGeneralExceptions(AFSApplicationException ex) {
+        RestApiErrorResponseDTO responseDTO =
+            buildRestApiErrorResponse(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR, List.of());
+        return createResponseEntity(responseDTO);
+    }
+
     @ExceptionHandler({Exception.class})
     public ResponseEntity<Object> handleAll(Exception ex) {
         String error = messageSource.getMessage(Error.INTERNAL_SERVER_ERROR_OCCURRED.getKey(), null, Locale.ENGLISH);
@@ -109,7 +117,7 @@ public class RestApiExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     private ResponseEntity<Object> createResponseEntity(RestApiErrorResponseDTO responseDTO) {
-        return new ResponseEntity<>(responseDTO, new HttpHeaders(), responseDTO.getStatus());
+        return new ResponseEntity<>(responseDTO, new HttpHeaders(), responseDTO.status());
     }
 
     private RestApiErrorResponseDTO buildRestApiErrorResponse(String exceptionMessage, HttpStatus httpStatus, List<String> errors) {
@@ -117,7 +125,7 @@ public class RestApiExceptionHandler extends ResponseEntityExceptionHandler {
             .status(httpStatus)
             .message(exceptionMessage)
             .errors(errors)
-            .timestamp(LocalDateTime.now())
+            .timestamp(LocalDateTime.now().toString())
             .build();
     }
 }

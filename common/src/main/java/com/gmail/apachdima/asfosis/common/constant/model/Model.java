@@ -8,7 +8,8 @@ import lombok.Getter;
 public enum Model {
 
     USER("User"),
-    ROLE("Role");
+    ROLE("Role"),
+    FILE_STORAGE("File");
 
     private final String name;
 
