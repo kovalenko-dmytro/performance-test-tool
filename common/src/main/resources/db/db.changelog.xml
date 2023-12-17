@@ -29,4 +29,8 @@
     <changeSet id="db-change-set-6" author="asfosis">
         <sqlFile path="db/sql/2023-02-04-5555_create_table_files.sql"/>
     </changeSet>
+
+    <changeSet id="db-change-set-7" author="asfosis">
+        <sqlFile path="db/sql/2023-02-04-6666_create_table_email_logs.sql"/>
+    </changeSet>
 </databaseChangeLog>

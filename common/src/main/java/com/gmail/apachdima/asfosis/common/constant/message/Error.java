@@ -23,6 +23,8 @@ public enum Error {
     FILE_STORAGE_SERVICE_UNAVAILABLE("error.file.storage.service.unavailable"),
     FILE_STORAGE_UNABLE_UPLOAD("error.file.storage.unable.upload"),
     FILE_STORAGE_UNABLE_READ("error.file.storage.unable.read"),
+    EMAIL_SEND_ERROR("error.email.send"),
+    EMAIL_TEMPLATE_NOT_FOUND("error.email.template.not.found"),
     LOG_CONTROLLER_EXECUTE("error.log.controller.execute");
 
     private final String key;

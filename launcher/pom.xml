@@ -30,5 +30,15 @@
             <artifactId>file-storage</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>com.gmail.apachdima.asfosis.notification.email</groupId>
+            <artifactId>email</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.gmail.apachdima.asfosis.notification.sms</groupId>
+            <artifactId>sms</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 </project>
