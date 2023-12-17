@@ -21,7 +21,7 @@
     <dependencies>
         <dependency>
             <groupId>com.gmail.apachdima.asfosis.common</groupId>
-            <artifactId>common</artifactId>
+            <artifactId>common-service</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 

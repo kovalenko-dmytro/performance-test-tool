@@ -34,4 +34,4 @@ build/
 /mvnw
 /mvnw.cmd
 
-env/.env
+dev-tools/.env

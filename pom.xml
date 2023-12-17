@@ -18,9 +18,8 @@
 	<description>Typography assistant</description>
 
 	<modules>
-		<module>common</module>
+		<module>common-service</module>
 		<module>launcher</module>
-		<module>tool-service</module>
 		<module>user-service</module>
         <module>file-service</module>
 		<module>notification-service</module>

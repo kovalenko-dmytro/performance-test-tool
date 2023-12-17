@@ -21,11 +21,6 @@
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.gmail.apachdima.asfosis.tool</groupId>
-            <artifactId>tool-service</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
             <groupId>com.gmail.apachdima.asfosis.file.storage</groupId>
             <artifactId>file-storage</artifactId>
             <version>0.0.1-SNAPSHOT</version>
