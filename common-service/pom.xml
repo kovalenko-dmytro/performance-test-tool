@@ -6,11 +6,11 @@
 
     <parent>
         <groupId>com.gmail.apachdima</groupId>
-        <artifactId>asfosis</artifactId>
+        <artifactId>ptt</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.gmail.apachdima.asfosis.common</groupId>
+    <groupId>com.gmail.apachdima.ptt.common</groupId>
     <artifactId>common-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 

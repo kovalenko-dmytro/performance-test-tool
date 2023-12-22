@@ -6,33 +6,33 @@
 
     <parent>
         <groupId>com.gmail.apachdima</groupId>
-        <artifactId>asfosis</artifactId>
+        <artifactId>ptt</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.gmail.apachdima.asfosis.launcher</groupId>
+    <groupId>com.gmail.apachdima.ptt.launcher</groupId>
     <artifactId>launcher</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
     <dependencies>
         <dependency>
-            <groupId>com.gmail.apachdima.asfosis.user</groupId>
+            <groupId>com.gmail.apachdima.ptt.user</groupId>
             <artifactId>user-service</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.gmail.apachdima.asfosis.file.storage</groupId>
-            <artifactId>file-storage</artifactId>
+            <groupId>com.gmail.apachdima.ptt.file.storage</groupId>
+            <artifactId>file-storage-service</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.gmail.apachdima.asfosis.notification.email</groupId>
-            <artifactId>email</artifactId>
+            <groupId>com.gmail.apachdima.ptt.notification.email</groupId>
+            <artifactId>email-service</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.gmail.apachdima.asfosis.notification.sms</groupId>
-            <artifactId>sms</artifactId>
+            <groupId>com.gmail.apachdima.ptt.notification.sms</groupId>
+            <artifactId>sms-service</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>

@@ -5,22 +5,22 @@
 
     <parent>
         <groupId>com.gmail.apachdima</groupId>
-        <artifactId>asfosis</artifactId>
+        <artifactId>ptt</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.gmail.apachdima.asfosis.file</groupId>
+    <groupId>com.gmail.apachdima.ptt.file</groupId>
     <artifactId>file-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
-        <module>file-storage</module>
+        <module>file-storage-service</module>
     </modules>
 
     <dependencies>
         <dependency>
-            <groupId>com.gmail.apachdima.asfosis.common</groupId>
+            <groupId>com.gmail.apachdima.ptt.common</groupId>
             <artifactId>common-service</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>

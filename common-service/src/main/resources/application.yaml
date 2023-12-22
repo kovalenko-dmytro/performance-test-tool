@@ -50,5 +50,7 @@ application:
     refresh-expiration: ${JWT_REFRESH_EXPIRED}
 
 server:
+  servlet:
+    context-path: /${CONTEXT_PATH}
   port: ${SERVER_PORT}
   forward-headers-strategy: framework

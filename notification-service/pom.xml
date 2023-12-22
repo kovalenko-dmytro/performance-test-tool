@@ -5,23 +5,23 @@
 
     <parent>
         <groupId>com.gmail.apachdima</groupId>
-        <artifactId>asfosis</artifactId>
+        <artifactId>ptt</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.gmail.apachdima.asfosis.notification</groupId>
+    <groupId>com.gmail.apachdima.ptt.notification</groupId>
     <artifactId>notification-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
-        <module>email</module>
-        <module>sms</module>
+        <module>email-service</module>
+        <module>sms-service</module>
     </modules>
 
     <dependencies>
         <dependency>
-            <groupId>com.gmail.apachdima.asfosis.common</groupId>
+            <groupId>com.gmail.apachdima.ptt.common</groupId>
             <artifactId>common-service</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>

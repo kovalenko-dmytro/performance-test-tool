@@ -11,11 +11,11 @@
 	</parent>
 
 	<groupId>com.gmail.apachdima</groupId>
-	<artifactId>asfosis</artifactId>
+	<artifactId>ptt</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<name>asfosis</name>
-	<description>Typography assistant</description>
+	<name>ptt</name>
+	<description>Performance test tool</description>
 
 	<modules>
 		<module>common-service</module>

@@ -6,31 +6,31 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
 
-    <changeSet id="db-change-set-1" author="asfosis">
+    <changeSet id="db-change-set-1" author="ptt">
         <sqlFile path="db/sql/2023-02-04-0000_create_extension_uuid.sql"/>
     </changeSet>
 
-    <changeSet id="db-change-set-2" author="asfosis">
+    <changeSet id="db-change-set-2" author="ptt">
         <sqlFile path="db/sql/2023-02-04-1111_create_table_users.sql"/>
     </changeSet>
 
-    <changeSet id="db-change-set-3" author="asfosis">
+    <changeSet id="db-change-set-3" author="ptt">
         <sqlFile path="db/sql/2023-02-04-2222_create_table_roles.sql"/>
     </changeSet>
 
-    <changeSet id="db-change-set-4" author="asfosis">
+    <changeSet id="db-change-set-4" author="ptt">
         <sqlFile path="db/sql/2023-02-04-3333_create_table_users_roles.sql"/>
     </changeSet>
 
-    <changeSet id="db-change-set-5" author="asfosis">
+    <changeSet id="db-change-set-5" author="ptt">
         <sqlFile path="db/sql/2023-02-04-4444_insert_table_roles.sql"/>
     </changeSet>
 
-    <changeSet id="db-change-set-6" author="asfosis">
+    <changeSet id="db-change-set-6" author="ptt">
         <sqlFile path="db/sql/2023-02-04-5555_create_table_files.sql"/>
     </changeSet>
 
-    <changeSet id="db-change-set-7" author="asfosis">
+    <changeSet id="db-change-set-7" author="ptt">
         <sqlFile path="db/sql/2023-02-04-6666_create_table_email_logs.sql"/>
     </changeSet>
 </databaseChangeLog>
