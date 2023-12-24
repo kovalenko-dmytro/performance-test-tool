@@ -18,6 +18,7 @@ public enum CommonConstant {
     EQUAL("="),
     COMMA(","),
     SPACE(" "),
+    SLASH("/"),
     EMPTY(""),
     EMAIL_TEMPLATE_SUFFIX(".html"),
     EMAIL_TEMPLATE_MODE("HTML"),

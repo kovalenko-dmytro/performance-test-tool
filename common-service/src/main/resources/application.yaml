@@ -17,6 +17,11 @@ spring:
     url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
+  rabbitmq:
+    host: ${MESSAGE_BROKER_HOST}
+    port: ${MESSAGE_BROKER_EXTERNAL_PORT}
+    username: ${MESSAGE_BROKER_USERNAME}
+    password: ${MESSAGE_BROKER_PASSWORD}
   mail:
     protocol: smtp
     host: smtp.gmail.com

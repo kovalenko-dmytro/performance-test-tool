@@ -23,6 +23,8 @@
 		<module>user-service</module>
         <module>file-service</module>
 		<module>notification-service</module>
+        <module>test-execution-service</module>
+		<module>test-execution-directory</module>
 	</modules>
 
 	<properties>
