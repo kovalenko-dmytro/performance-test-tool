@@ -10,6 +10,7 @@ public enum Model {
     USER("User"),
     ROLE("Role"),
     STORED_FILE("File"),
+    SIMULATION("Simulation"),
     TEST_EXECUTION("Test execution");
 
     private final String name;

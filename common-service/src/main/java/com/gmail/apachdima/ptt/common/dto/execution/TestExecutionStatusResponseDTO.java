@@ -4,7 +4,7 @@ import com.gmail.apachdima.ptt.common.constant.execution.TestExecutionStatus;
 import lombok.Builder;
 
 @Builder
-public record TestExecutionStatusResponse(
+public record TestExecutionStatusResponseDTO(
     String executionId,
     float progress,
     TestExecutionStatus status,

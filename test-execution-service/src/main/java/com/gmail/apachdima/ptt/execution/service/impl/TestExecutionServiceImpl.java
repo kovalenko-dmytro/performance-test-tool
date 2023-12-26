@@ -5,15 +5,15 @@ import com.gmail.apachdima.ptt.common.constant.execution.TestExecutionStatus;
 import com.gmail.apachdima.ptt.common.constant.message.Error;
 import com.gmail.apachdima.ptt.common.constant.model.Model;
 import com.gmail.apachdima.ptt.common.constant.mq.MessageBrokerConstant;
-import com.gmail.apachdima.ptt.common.dto.execution.TestExecutionRequest;
-import com.gmail.apachdima.ptt.common.dto.execution.TestExecutionResponse;
-import com.gmail.apachdima.ptt.common.dto.execution.TestExecutionStatusResponse;
+import com.gmail.apachdima.ptt.common.dto.execution.TestExecutionRequestDTO;
+import com.gmail.apachdima.ptt.common.dto.execution.TestExecutionResponseDTO;
+import com.gmail.apachdima.ptt.common.dto.execution.TestExecutionStatusResponseDTO;
 import com.gmail.apachdima.ptt.common.dto.file.FileResponseDTO;
 import com.gmail.apachdima.ptt.common.exception.EntityNotFoundException;
 import com.gmail.apachdima.ptt.common.exception.PTTApplicationException;
 import com.gmail.apachdima.ptt.execution.context.MessageBrokerContext;
 import com.gmail.apachdima.ptt.execution.context.TestExecutionContext;
-import com.gmail.apachdima.ptt.execution.helper.CommandPreparationHelper;
+import com.gmail.apachdima.ptt.execution.helper.CommandHelper;
 import com.gmail.apachdima.ptt.execution.helper.LogFileCreationHelper;
 import com.gmail.apachdima.ptt.execution.helper.MessageBrokerHelper;
 import com.gmail.apachdima.ptt.execution.mapper.TestExecutionMapper;
@@ -37,7 +37,7 @@ import java.util.Objects;
 public class TestExecutionServiceImpl implements TestExecutionService {
 
     private final MessageBrokerHelper messageBrokerHelper;
-    private final CommandPreparationHelper commandPreparationHelper;
+    private final CommandHelper commandHelper;
     private final LogFileCreationHelper logFileCreationHelper;
     private final FileStorageService fileStorageService;
     private final TestExecutionRepository testExecutionRepository;
@@ -46,7 +46,7 @@ public class TestExecutionServiceImpl implements TestExecutionService {
 
     @Async
     @Override
-    public void execute(String executionId, TestExecutionRequest request, String currentUrl, String executedBy, Locale locale) {
+    public void execute(String executionId, TestExecutionRequestDTO request, String currentUrl, String executedBy, Locale locale) {
         MessageBrokerContext mbc = messageBrokerHelper.init(executionId);
         TestExecutionContext tec =
             new TestExecutionContext(executionId,0.0f, TestExecutionStatus.SUBMITTED,null, mbc);
@@ -54,11 +54,11 @@ public class TestExecutionServiceImpl implements TestExecutionService {
 
         try {
             LocalDateTime startedAt = LocalDateTime.now();
-            String command = commandPreparationHelper.prepareCommand(request);
+            String command = commandHelper.prepareCommand(request);
             tec.setStatus(TestExecutionStatus.STARTED);
             messageBrokerHelper.send(tec);
 
-            Process process = commandPreparationHelper.runCommand(command, locale);
+            Process process = commandHelper.runCommand(command, locale);
             tec.setStatus(TestExecutionStatus.RUNNING);
             messageBrokerHelper.send(tec);
 
@@ -98,13 +98,13 @@ public class TestExecutionServiceImpl implements TestExecutionService {
     }
 
     @Override
-    public TestExecutionStatusResponse getLatestTestExecutionStatus(String executionId) {
+    public TestExecutionStatusResponseDTO getLatestTestExecutionStatus(String executionId) {
         String queueName = MessageBrokerConstant.TEST_EXECUTION_QUEUE_PREFIX.getValue() + executionId;
-        return (TestExecutionStatusResponse) messageBrokerHelper.receive(queueName);
+        return (TestExecutionStatusResponseDTO) messageBrokerHelper.receive(queueName);
     }
 
     @Override
-    public TestExecutionResponse getExecution(String executionId, Locale locale) {
+    public TestExecutionResponseDTO getExecution(String executionId, Locale locale) {
         return testExecutionMapper.toTestExecutionResponseDTO(getById(executionId, locale));
     }
 

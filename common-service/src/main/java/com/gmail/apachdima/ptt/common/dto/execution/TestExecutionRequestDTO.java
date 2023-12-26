@@ -4,9 +4,8 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 
 @Builder
-public record TestExecutionRequest(
-    String foo,
-    String bar,
+public record TestExecutionRequestDTO(
+    String simulationClass,
     @NotBlank
     String baseUrl
 ) {

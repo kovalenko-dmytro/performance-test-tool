@@ -7,7 +7,7 @@ import lombok.Builder;
 import java.time.LocalDateTime;
 
 @Builder
-public record TestExecutionResponse(
+public record TestExecutionResponseDTO(
     String executionId,
     String executedBy,
     TestExecutionStatus status,

@@ -1,7 +1,7 @@
 package com.gmail.apachdima.ptt.execution.helper.impl;
 
 import com.gmail.apachdima.ptt.common.constant.mq.MessageBrokerConstant;
-import com.gmail.apachdima.ptt.common.dto.execution.TestExecutionStatusResponse;
+import com.gmail.apachdima.ptt.common.dto.execution.TestExecutionStatusResponseDTO;
 import com.gmail.apachdima.ptt.execution.context.MessageBrokerContext;
 import com.gmail.apachdima.ptt.execution.context.TestExecutionContext;
 import com.gmail.apachdima.ptt.execution.helper.MessageBrokerHelper;
@@ -49,7 +49,7 @@ public class MessageBrokerHelperImpl implements MessageBrokerHelper {
             .convertAndSend(
                 tec.getMessageBrokerContext().exchangeName(),
                 tec.getMessageBrokerContext().routingKey(),
-                TestExecutionStatusResponse.builder()
+                TestExecutionStatusResponseDTO.builder()
                     .executionId(tec.getExecutionId())
                     .progress(tec.getProgress())
                     .status(tec.getStatus())

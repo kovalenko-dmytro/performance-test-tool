@@ -2,10 +2,10 @@ package com.gmail.apachdima.ptt.execution.helper.impl;
 
 import com.gmail.apachdima.ptt.common.constant.common.CommonConstant;
 import com.gmail.apachdima.ptt.common.constant.message.Error;
-import com.gmail.apachdima.ptt.common.dto.execution.TestExecutionRequest;
+import com.gmail.apachdima.ptt.common.dto.execution.TestExecutionRequestDTO;
 import com.gmail.apachdima.ptt.common.exception.PTTApplicationException;
 import com.gmail.apachdima.ptt.execution.constant.TestExecutionConstant;
-import com.gmail.apachdima.ptt.execution.helper.CommandPreparationHelper;
+import com.gmail.apachdima.ptt.execution.helper.CommandHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
@@ -18,14 +18,18 @@ import java.util.Locale;
 
 @Component
 @RequiredArgsConstructor
-public class CommandPreparationHelperImpl implements CommandPreparationHelper {
+public class CommandHelperImpl implements CommandHelper {
 
     private final MessageSource messageSource;
 
     @Override
-    public String prepareCommand(TestExecutionRequest request) {
+    public String prepareCommand(TestExecutionRequestDTO request) {
         //http://computer-database.gatling.io
         return TestExecutionConstant.BASE_COMMAND.getValue()
+            .concat(CommonConstant.SPACE.getValue())
+            .concat(TestExecutionConstant.CommandParameter.SIMULATION_CLASS.getValue())
+            .concat(CommonConstant.EQUAL.getValue())
+            .concat(request.simulationClass())
             .concat(CommonConstant.SPACE.getValue())
             .concat(TestExecutionConstant.CommandParameter.BASE_URL.getValue())
             .concat(CommonConstant.EQUAL.getValue())

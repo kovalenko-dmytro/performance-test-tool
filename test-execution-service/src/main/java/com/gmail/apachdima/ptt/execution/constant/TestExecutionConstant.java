@@ -25,7 +25,8 @@ public enum TestExecutionConstant {
     @Getter
     public enum CommandParameter {
 
-        BASE_URL("-DbaseUrl");
+        BASE_URL("-DbaseUrl"),
+        SIMULATION_CLASS("-DsimulationClass");
 
         private final String value;
     }

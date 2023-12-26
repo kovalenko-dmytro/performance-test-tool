@@ -1,9 +1,9 @@
 package com.gmail.apachdima.ptt.execution.controller;
 
 import com.gmail.apachdima.ptt.common.constant.common.CommonConstant;
-import com.gmail.apachdima.ptt.common.dto.execution.TestExecutionRequest;
-import com.gmail.apachdima.ptt.common.dto.execution.TestExecutionResponse;
-import com.gmail.apachdima.ptt.common.dto.execution.TestExecutionStatusResponse;
+import com.gmail.apachdima.ptt.common.dto.execution.TestExecutionRequestDTO;
+import com.gmail.apachdima.ptt.common.dto.execution.TestExecutionResponseDTO;
+import com.gmail.apachdima.ptt.common.dto.execution.TestExecutionStatusResponseDTO;
 import com.gmail.apachdima.ptt.execution.constant.TestExecutionConstant;
 import com.gmail.apachdima.ptt.execution.service.TestExecutionService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -21,7 +21,7 @@ import java.util.UUID;
 
 @Tag(name = "Test execution Service REST API")
 @RestController
-@RequestMapping(value = "/api/v1/test-execution")
+@RequestMapping(value = "/api/v1/test-executions")
 @RequiredArgsConstructor
 public class TestExecutionController {
 
@@ -29,7 +29,7 @@ public class TestExecutionController {
 
     @PostMapping()
     public ResponseEntity<?> execute(
-        @RequestBody @Valid TestExecutionRequest request,
+        @RequestBody @Valid TestExecutionRequestDTO request,
         HttpServletRequest httpRequest,
         Principal principal,
         @RequestParam(value = "locale", required = false, defaultValue = "en") Locale locale
@@ -43,14 +43,14 @@ public class TestExecutionController {
     @GetMapping(value = "/{executionId}/progress")
     public ResponseEntity<?> progress(
         @PathVariable String executionId) {
-        TestExecutionStatusResponse status = testExecutionService.getLatestTestExecutionStatus(executionId);
+        TestExecutionStatusResponseDTO status = testExecutionService.getLatestTestExecutionStatus(executionId);
         return Objects.isNull(status)
             ? ResponseEntity.noContent().build()
             : ResponseEntity.ok().body(status);
     }
 
     @GetMapping(value = "/{executionId}")
-    public ResponseEntity<TestExecutionResponse> getExecution(
+    public ResponseEntity<TestExecutionResponseDTO> getExecution(
         @PathVariable String executionId,
         @RequestParam(value = "locale", required = false, defaultValue = "en") Locale locale
     ) {

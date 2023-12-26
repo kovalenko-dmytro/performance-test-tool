@@ -1,13 +1,13 @@
 package com.gmail.apachdima.ptt.execution.service;
 
-import com.gmail.apachdima.ptt.common.dto.execution.TestExecutionRequest;
-import com.gmail.apachdima.ptt.common.dto.execution.TestExecutionResponse;
-import com.gmail.apachdima.ptt.common.dto.execution.TestExecutionStatusResponse;
+import com.gmail.apachdima.ptt.common.dto.execution.TestExecutionRequestDTO;
+import com.gmail.apachdima.ptt.common.dto.execution.TestExecutionResponseDTO;
+import com.gmail.apachdima.ptt.common.dto.execution.TestExecutionStatusResponseDTO;
 
 import java.util.Locale;
 
 public interface TestExecutionService {
-    void execute(String executionId, TestExecutionRequest request, String currentUrl, String executedBy, Locale locale);
-    TestExecutionStatusResponse getLatestTestExecutionStatus(String executionId);
-    TestExecutionResponse getExecution(String executionId, Locale locale);
+    void execute(String executionId, TestExecutionRequestDTO request, String currentUrl, String executedBy, Locale locale);
+    TestExecutionStatusResponseDTO getLatestTestExecutionStatus(String executionId);
+    TestExecutionResponseDTO getExecution(String executionId, Locale locale);
 }
