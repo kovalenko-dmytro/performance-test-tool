@@ -32,8 +32,7 @@ public class FileStorageController {
         @RequestPart("files") MultipartFile[] files,
         @RequestParam(value = "locale", required = false, defaultValue = "en") Locale locale
     ) {
-        fileStorageService.upload(files, locale);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(fileStorageService.upload(files, locale));
     }
 
     @GetMapping()

@@ -25,6 +25,11 @@ public enum Error {
     FILE_STORAGE_UNABLE_READ("error.file.storage.unable.read"),
     EMAIL_SEND_ERROR("error.email.send"),
     EMAIL_TEMPLATE_NOT_FOUND("error.email.template.not.found"),
+    TEST_EXECUTION_START_COMMAND_ERROR("error.test.execution.command.start"),
+    TEST_EXECUTION_READ_PROCESS_ERROR("error.test.execution.process.read"),
+    TEST_EXECUTION_PROCESS_INTERRUPTION_ERROR("error.test.execution.process.interrupted"),
+    TEST_EXECUTION_PROCESS_LOG_CREATION_ERROR("error.test.execution.log.created"),
+    TEST_EXECUTION_PROCESS_TERMINATION_ERROR("error.test.execution.process.terminated"),
     LOG_CONTROLLER_EXECUTE("error.log.controller.execute");
 
     private final String key;

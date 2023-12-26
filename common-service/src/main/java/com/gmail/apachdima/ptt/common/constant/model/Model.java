@@ -9,7 +9,8 @@ public enum Model {
 
     USER("User"),
     ROLE("Role"),
-    STORED_FILE("File");
+    STORED_FILE("File"),
+    TEST_EXECUTION("Test execution");
 
     private final String name;
 

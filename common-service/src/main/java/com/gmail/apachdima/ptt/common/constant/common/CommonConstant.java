@@ -15,11 +15,13 @@ public enum CommonConstant {
     BEARER_AUTH_HEADER_PREFIX("Bearer "),
     COLON(":"),
     DOT("."),
+    DASH("-"),
     EQUAL("="),
     COMMA(","),
     SPACE(" "),
     SLASH("/"),
     EMPTY(""),
+    CARRIAGE_RETURN("\r\n"),
     EMAIL_TEMPLATE_SUFFIX(".html"),
     EMAIL_TEMPLATE_MODE("HTML"),
     DEFAULT_CHARSET("UTF-8");

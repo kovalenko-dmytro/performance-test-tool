@@ -4,6 +4,7 @@ import com.gmail.apachdima.ptt.common.constant.common.CommonConstant;
 import com.gmail.apachdima.ptt.common.dto.execution.TestExecutionRequest;
 import com.gmail.apachdima.ptt.common.dto.execution.TestExecutionResponse;
 import com.gmail.apachdima.ptt.common.dto.execution.TestExecutionStatusResponse;
+import com.gmail.apachdima.ptt.execution.constant.TestExecutionConstant;
 import com.gmail.apachdima.ptt.execution.service.TestExecutionService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.security.Principal;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.UUID;
@@ -26,20 +28,21 @@ public class TestExecutionController {
     private final TestExecutionService testExecutionService;
 
     @PostMapping()
-    public ResponseEntity<TestExecutionResponse> execute(
+    public ResponseEntity<?> execute(
         @RequestBody @Valid TestExecutionRequest request,
         HttpServletRequest httpRequest,
+        Principal principal,
         @RequestParam(value = "locale", required = false, defaultValue = "en") Locale locale
     ) {
         String executionId = UUID.randomUUID().toString();
         String currentUrl = httpRequest.getRequestURL().toString();
-        URI uri = URI.create(currentUrl.concat(CommonConstant.SLASH.getValue() + executionId + "/progress"));
-        testExecutionService.execute(executionId, request, currentUrl, locale);
-        return ResponseEntity.accepted().location(uri).build();
+        testExecutionService.execute(executionId, request, currentUrl, principal.getName(), locale);
+        return ResponseEntity.accepted().location(createProgressUri(executionId, currentUrl)).build();
     }
 
     @GetMapping(value = "/{executionId}/progress")
-    public ResponseEntity<?> progress(@PathVariable String executionId) {
+    public ResponseEntity<?> progress(
+        @PathVariable String executionId) {
         TestExecutionStatusResponse status = testExecutionService.getLatestTestExecutionStatus(executionId);
         return Objects.isNull(status)
             ? ResponseEntity.noContent().build()
@@ -47,10 +50,17 @@ public class TestExecutionController {
     }
 
     @GetMapping(value = "/{executionId}")
-    public ResponseEntity<TestExecutionStatusResponse> getExecution(
+    public ResponseEntity<TestExecutionResponse> getExecution(
         @PathVariable String executionId,
         @RequestParam(value = "locale", required = false, defaultValue = "en") Locale locale
     ) {
         return ResponseEntity.ok().body(testExecutionService.getExecution(executionId, locale));
+    }
+
+    private static URI createProgressUri(String executionId, String currentUrl) {
+        return URI.create(currentUrl
+            .concat(CommonConstant.SLASH.getValue()
+                .concat(executionId)
+                .concat(TestExecutionConstant.PROGRESS_API_URI_PATH.getValue())));
     }
 }

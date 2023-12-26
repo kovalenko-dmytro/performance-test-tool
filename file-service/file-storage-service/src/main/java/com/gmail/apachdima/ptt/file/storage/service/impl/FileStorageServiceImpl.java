@@ -32,7 +32,7 @@ public class FileStorageServiceImpl implements FileStorageService {
     private final MessageSource messageSource;
 
     @Override
-    public void upload(MultipartFile[] files, Locale locale) {
+    public List<FileResponseDTO> upload(MultipartFile[] files, Locale locale) {
         List<StoredFile> storedFiles = new LinkedList<>();
         StoredFile storedFile;
         for (MultipartFile file : files) {
@@ -52,7 +52,9 @@ public class FileStorageServiceImpl implements FileStorageService {
             }
             storedFiles.add(storedFile);
         }
-        fileStorageRepository.saveAll(storedFiles);
+        return fileStorageRepository.saveAll(storedFiles).stream()
+            .map(fileStorageMapper::toFileResponseDTO)
+            .toList();
     }
 
     @Override
@@ -76,6 +78,11 @@ public class FileStorageServiceImpl implements FileStorageService {
             .fileName(storedFile.getFileName())
             .resource(storedFile.getBytes())
             .build();
+    }
+
+    @Override
+    public StoredFile getStoredFileModel(String fileId, Locale locale) {
+        return getById(fileId, locale);
     }
 
     private StoredFile getById(String fileId, Locale locale) {

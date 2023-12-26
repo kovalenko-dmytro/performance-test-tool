@@ -2,16 +2,33 @@ package com.gmail.apachdima.ptt.execution.service.impl;
 
 import com.gmail.apachdima.ptt.common.constant.common.CommonConstant;
 import com.gmail.apachdima.ptt.common.constant.execution.TestExecutionStatus;
+import com.gmail.apachdima.ptt.common.constant.message.Error;
+import com.gmail.apachdima.ptt.common.constant.model.Model;
 import com.gmail.apachdima.ptt.common.constant.mq.MessageBrokerConstant;
 import com.gmail.apachdima.ptt.common.dto.execution.TestExecutionRequest;
+import com.gmail.apachdima.ptt.common.dto.execution.TestExecutionResponse;
 import com.gmail.apachdima.ptt.common.dto.execution.TestExecutionStatusResponse;
+import com.gmail.apachdima.ptt.common.dto.file.FileResponseDTO;
+import com.gmail.apachdima.ptt.common.exception.EntityNotFoundException;
+import com.gmail.apachdima.ptt.common.exception.PTTApplicationException;
+import com.gmail.apachdima.ptt.execution.context.MessageBrokerContext;
+import com.gmail.apachdima.ptt.execution.context.TestExecutionContext;
+import com.gmail.apachdima.ptt.execution.helper.CommandPreparationHelper;
+import com.gmail.apachdima.ptt.execution.helper.LogFileCreationHelper;
+import com.gmail.apachdima.ptt.execution.helper.MessageBrokerHelper;
+import com.gmail.apachdima.ptt.execution.mapper.TestExecutionMapper;
+import com.gmail.apachdima.ptt.execution.model.TestExecution;
+import com.gmail.apachdima.ptt.execution.repository.TestExecutionRepository;
 import com.gmail.apachdima.ptt.execution.service.TestExecutionService;
+import com.gmail.apachdima.ptt.file.storage.service.FileStorageService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.amqp.core.*;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.context.MessageSource;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -19,104 +36,83 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class TestExecutionServiceImpl implements TestExecutionService {
 
-    private final RabbitTemplate rabbitTemplate;
-    private final AmqpAdmin amqpAdmin;
-
-    private TestExecutionStatusResponse response;
+    private final MessageBrokerHelper messageBrokerHelper;
+    private final CommandPreparationHelper commandPreparationHelper;
+    private final LogFileCreationHelper logFileCreationHelper;
+    private final FileStorageService fileStorageService;
+    private final TestExecutionRepository testExecutionRepository;
+    private final TestExecutionMapper testExecutionMapper;
+    private final MessageSource messageSource;
 
     @Async
     @Override
-    public void execute(String executionId, TestExecutionRequest request, String currentUrl, Locale locale) {
-        String queueName = MessageBrokerConstant.TEST_EXECUTION_QUEUE_PREFIX.getValue() + executionId;
-        String exchangeName = MessageBrokerConstant.TEST_EXECUTION_EXCHANGE_PREFIX.getValue() + executionId;
-        String routingKey = MessageBrokerConstant.TEST_EXECUTION_ROUTINE_KEY.getValue() + executionId;
+    public void execute(String executionId, TestExecutionRequest request, String currentUrl, String executedBy, Locale locale) {
+        MessageBrokerContext mbc = messageBrokerHelper.init(executionId);
+        TestExecutionContext tec =
+            new TestExecutionContext(executionId,0.0f, TestExecutionStatus.SUBMITTED,null, mbc);
+        messageBrokerHelper.send(tec);
+
         try {
+            LocalDateTime startedAt = LocalDateTime.now();
+            String command = commandPreparationHelper.prepareCommand(request);
+            tec.setStatus(TestExecutionStatus.STARTED);
+            messageBrokerHelper.send(tec);
 
-            Queue queue = createQueue(queueName);
-            TopicExchange exchange = createExchange(exchangeName);
-            createBinding(queue, exchange, routingKey);
+            Process process = commandPreparationHelper.runCommand(command, locale);
+            tec.setStatus(TestExecutionStatus.RUNNING);
+            messageBrokerHelper.send(tec);
 
-            rabbitTemplate.convertAndSend(exchangeName, routingKey, TestExecutionStatusResponse.builder()
-                .executionId(executionId).progress(0.0f).status(TestExecutionStatus.SUBMITTED).build());
+            MultipartFile log = logFileCreationHelper.createLog(process, tec, messageBrokerHelper, locale);
 
-            Thread.currentThread().sleep(20000l);
-            rabbitTemplate.convertAndSend(exchangeName, routingKey, TestExecutionStatusResponse.builder()
-                .executionId(executionId).progress(10.0f).status(TestExecutionStatus.STARTED).build());
-
-            Thread.currentThread().sleep(50000l);
-            rabbitTemplate.convertAndSend(exchangeName, routingKey, TestExecutionStatusResponse.builder()
-                .executionId(executionId).progress(50.0f).status(TestExecutionStatus.RUNNING).build());
-
-            Thread.currentThread().sleep(50000l);
-            rabbitTemplate.convertAndSend(exchangeName, routingKey, TestExecutionStatusResponse.builder()
-                .executionId(executionId).progress(100.0f).status(TestExecutionStatus.FINISHED)
-                .resultUrl(currentUrl.concat(CommonConstant.SLASH.getValue()).concat(executionId)).build());
-
-        } catch (InterruptedException e) {
-            rabbitTemplate.convertAndSend(exchangeName, routingKey, TestExecutionStatusResponse.builder()
-                .executionId(executionId).progress(100.0f).status(TestExecutionStatus.TERMINATED).build());
-            throw new RuntimeException(e);
-        }
-
-
-
-
-
-        /*Path workDirectory = Paths.get(System.getProperty("user.dir"), "test-execution-directory");
-        String command = "mvn io.gatling:gatling-maven-plugin:test -DbaseUrl=http://computer-database.gatling.io";
-        try {
-            boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("windows");
-            ProcessBuilder builder = new ProcessBuilder();
-            builder.directory(new File(workDirectory.toString()));
-            builder.redirectErrorStream(true);
-            if (isWindows) {
-                builder.command("cmd.exe", "/c", command);
-            } else {
-                builder.command("sh", "-c", command);
+            List<FileResponseDTO> logs = fileStorageService.upload(new MultipartFile[]{log}, locale);
+            if (Objects.isNull(logs) || logs.isEmpty()) {
+                tec.setProgress(100.0f);
+                tec.setStatus(TestExecutionStatus.TERMINATED);
+                messageBrokerHelper.send(tec);
+                throw new PTTApplicationException(
+                    messageSource.getMessage(
+                        Error.TEST_EXECUTION_PROCESS_LOG_CREATION_ERROR.getKey(), null, locale));
             }
-            Process process = builder.start();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                System.out.println(line);
-            }
-            int exitCode = process.waitFor();
-            System.out.println("\nExited with error code : " + exitCode);
+
+            testExecutionRepository.save(TestExecution.builder()
+                    .executionId(executionId)
+                    .executedBy(executedBy)
+                    .startedAt(startedAt)
+                    .finishedAt(LocalDateTime.now())
+                    .status(TestExecutionStatus.FINISHED)
+                    .log(fileStorageService.getStoredFileModel(logs.get(0).fileId(), locale))
+                .build());
+
+            tec.setProgress(100.0f);
+            tec.setResultUrl(currentUrl.concat(CommonConstant.SLASH.getValue() + executionId));
+            tec.setStatus(TestExecutionStatus.FINISHED);
+            messageBrokerHelper.send(tec);
         } catch (Exception e) {
-            e.printStackTrace();
-        }*/
+            tec.setProgress(100.0f);
+            tec.setStatus(TestExecutionStatus.TERMINATED);
+            messageBrokerHelper.send(tec);
+            throw new PTTApplicationException(
+                messageSource.getMessage(
+                    Error.TEST_EXECUTION_PROCESS_TERMINATION_ERROR.getKey(), new Object[]{e.getMessage()}, locale));
+        }
     }
 
     @Override
     public TestExecutionStatusResponse getLatestTestExecutionStatus(String executionId) {
         String queueName = MessageBrokerConstant.TEST_EXECUTION_QUEUE_PREFIX.getValue() + executionId;
-        TestExecutionStatusResponse received = (TestExecutionStatusResponse) rabbitTemplate.receiveAndConvert(queueName);
-        if (received != null && received.progress() == 100.0f) {
-            response = received;
-        }
-        return received;
+        return (TestExecutionStatusResponse) messageBrokerHelper.receive(queueName);
     }
 
     @Override
-    public TestExecutionStatusResponse getExecution(String executionId, Locale locale) {
-        //TODO from DB
-        return Objects.isNull(response) ? TestExecutionStatusResponse.builder().build() : response;
+    public TestExecutionResponse getExecution(String executionId, Locale locale) {
+        return testExecutionMapper.toTestExecutionResponseDTO(getById(executionId, locale));
     }
 
-    private Queue createQueue(String queueName) {
-        Queue queue  = new Queue(queueName);
-        amqpAdmin.declareQueue(queue);
-        return queue;
-    }
-
-    private TopicExchange createExchange(String exchangeName) {
-        TopicExchange exchange  = new TopicExchange(exchangeName);
-        amqpAdmin.declareExchange(exchange);
-        return exchange;
-    }
-
-    private void createBinding(Queue queue, TopicExchange exchange, String routingKey) {
-        Binding binding = BindingBuilder.bind(queue).to(exchange).with(routingKey);
-        amqpAdmin.declareBinding(binding);
+    private TestExecution getById(String executionId, Locale locale) {
+        Object[] params = new Object[]{Model.TEST_EXECUTION.getName(), Model.Field.ID.getFieldName(), executionId};
+        return testExecutionRepository
+            .findById(executionId)
+            .orElseThrow(() ->
+                new EntityNotFoundException(messageSource.getMessage(Error.ENTITY_NOT_FOUND.getKey(), params, locale)));
     }
 }
