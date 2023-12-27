@@ -6,6 +6,6 @@ import java.util.Locale;
 
 public interface CommandHelper {
 
-    String prepareCommand(TestExecutionRequestDTO request);
+    String prepareCommand(String simulationClass, TestExecutionRequestDTO request);
     Process runCommand(String command, Locale locale);
 }

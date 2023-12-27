@@ -21,7 +21,7 @@ import java.util.UUID;
 
 @Tag(name = "Test execution Service REST API")
 @RestController
-@RequestMapping(value = "/api/v1/test-executions")
+@RequestMapping(value = "/api/v1/simulations/{simulationId}/test-executions")
 @RequiredArgsConstructor
 public class TestExecutionController {
 
@@ -29,6 +29,7 @@ public class TestExecutionController {
 
     @PostMapping()
     public ResponseEntity<?> execute(
+        @PathVariable String simulationId,
         @RequestBody @Valid TestExecutionRequestDTO request,
         HttpServletRequest httpRequest,
         Principal principal,
@@ -36,13 +37,15 @@ public class TestExecutionController {
     ) {
         String executionId = UUID.randomUUID().toString();
         String currentUrl = httpRequest.getRequestURL().toString();
-        testExecutionService.execute(executionId, request, currentUrl, principal.getName(), locale);
+        testExecutionService.execute(simulationId, executionId, request, currentUrl, principal.getName(), locale);
         return ResponseEntity.accepted().location(createProgressUri(executionId, currentUrl)).build();
     }
 
     @GetMapping(value = "/{executionId}/progress")
     public ResponseEntity<?> progress(
-        @PathVariable String executionId) {
+        @PathVariable String simulationId,
+        @PathVariable String executionId
+    ) {
         TestExecutionStatusResponseDTO status = testExecutionService.getLatestTestExecutionStatus(executionId);
         return Objects.isNull(status)
             ? ResponseEntity.noContent().build()
@@ -51,6 +54,7 @@ public class TestExecutionController {
 
     @GetMapping(value = "/{executionId}")
     public ResponseEntity<TestExecutionResponseDTO> getExecution(
+        @PathVariable String simulationId,
         @PathVariable String executionId,
         @RequestParam(value = "locale", required = false, defaultValue = "en") Locale locale
     ) {

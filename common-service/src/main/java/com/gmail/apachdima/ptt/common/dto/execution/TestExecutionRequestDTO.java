@@ -5,7 +5,6 @@ import lombok.Builder;
 
 @Builder
 public record TestExecutionRequestDTO(
-    String simulationClass,
     @NotBlank
     String baseUrl
 ) {

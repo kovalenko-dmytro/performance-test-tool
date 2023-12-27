@@ -35,14 +35,15 @@
     </changeSet>
 
     <changeSet id="db-change-set-8" author="ptt">
-        <sqlFile path="db/sql/2023-02-04-7777_create_table_test_executions.sql"/>
+        <sqlFile path="db/sql/2023-02-04-7777_create_table_simulations.sql"/>
     </changeSet>
 
     <changeSet id="db-change-set-9" author="ptt">
-        <sqlFile path="db/sql/2023-02-04-8888_create_table_simulations.sql"/>
+        <sqlFile path="db/sql/2023-02-04-8888_insert_table_simulations.sql"/>
     </changeSet>
 
     <changeSet id="db-change-set-10" author="ptt">
-        <sqlFile path="db/sql/2023-02-04-9999_insert_table_simulations.sql"/>
+        <sqlFile path="db/sql/2023-02-04-9999_create_table_test_executions.sql"/>
     </changeSet>
+
 </databaseChangeLog>

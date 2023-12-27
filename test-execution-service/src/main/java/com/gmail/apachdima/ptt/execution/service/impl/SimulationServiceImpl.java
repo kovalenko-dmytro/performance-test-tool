@@ -37,6 +37,11 @@ public class SimulationServiceImpl implements SimulationService {
         return simulationMapper.toSimulationResponseDTO(getById(simulationId, locale));
     }
 
+    @Override
+    public Simulation getSimulationModel(String simulationId, Locale locale) {
+        return getById(simulationId, locale);
+    }
+
     private Simulation getById(String simulationId, Locale locale) {
         Object[] params = new Object[]{Model.SIMULATION.getName(), Model.Field.ID.getFieldName(), simulationId};
         return simulationRepository

@@ -17,8 +17,10 @@ import com.gmail.apachdima.ptt.execution.helper.CommandHelper;
 import com.gmail.apachdima.ptt.execution.helper.LogFileCreationHelper;
 import com.gmail.apachdima.ptt.execution.helper.MessageBrokerHelper;
 import com.gmail.apachdima.ptt.execution.mapper.TestExecutionMapper;
+import com.gmail.apachdima.ptt.execution.model.Simulation;
 import com.gmail.apachdima.ptt.execution.model.TestExecution;
 import com.gmail.apachdima.ptt.execution.repository.TestExecutionRepository;
+import com.gmail.apachdima.ptt.execution.service.SimulationService;
 import com.gmail.apachdima.ptt.execution.service.TestExecutionService;
 import com.gmail.apachdima.ptt.file.storage.service.FileStorageService;
 import lombok.RequiredArgsConstructor;
@@ -40,13 +42,16 @@ public class TestExecutionServiceImpl implements TestExecutionService {
     private final CommandHelper commandHelper;
     private final LogFileCreationHelper logFileCreationHelper;
     private final FileStorageService fileStorageService;
+    private final SimulationService simulationService;
     private final TestExecutionRepository testExecutionRepository;
     private final TestExecutionMapper testExecutionMapper;
     private final MessageSource messageSource;
 
     @Async
     @Override
-    public void execute(String executionId, TestExecutionRequestDTO request, String currentUrl, String executedBy, Locale locale) {
+    public void execute(String simulationId, String executionId, TestExecutionRequestDTO request,
+                        String currentUrl, String executedBy, Locale locale) {
+        Simulation simulation = simulationService.getSimulationModel(simulationId, locale);
         MessageBrokerContext mbc = messageBrokerHelper.init(executionId);
         TestExecutionContext tec =
             new TestExecutionContext(executionId,0.0f, TestExecutionStatus.SUBMITTED,null, mbc);
@@ -54,7 +59,7 @@ public class TestExecutionServiceImpl implements TestExecutionService {
 
         try {
             LocalDateTime startedAt = LocalDateTime.now();
-            String command = commandHelper.prepareCommand(request);
+            String command = commandHelper.prepareCommand(simulation.getSimulationClass(), request);
             tec.setStatus(TestExecutionStatus.STARTED);
             messageBrokerHelper.send(tec);
 
@@ -81,6 +86,7 @@ public class TestExecutionServiceImpl implements TestExecutionService {
                     .finishedAt(LocalDateTime.now())
                     .status(TestExecutionStatus.FINISHED)
                     .log(fileStorageService.getStoredFileModel(logs.get(0).fileId(), locale))
+                    .simulation(simulation)
                 .build());
 
             tec.setProgress(100.0f);

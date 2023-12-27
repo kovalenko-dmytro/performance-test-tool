@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "simulations")
@@ -28,4 +29,7 @@ public class Simulation {
 
     @Column(name = "added_at", nullable = false)
     private LocalDateTime addedAt;
+
+    @OneToMany(mappedBy = "simulation", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TestExecution> testExecutions;
 }

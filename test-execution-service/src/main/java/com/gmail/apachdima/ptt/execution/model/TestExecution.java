@@ -38,4 +38,8 @@ public class TestExecution {
     @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "log_", referencedColumnName = "file_")
     private StoredFile log;
+
+    @ManyToOne
+    @JoinColumn(name = "simulation_")
+    private Simulation simulation;
 }

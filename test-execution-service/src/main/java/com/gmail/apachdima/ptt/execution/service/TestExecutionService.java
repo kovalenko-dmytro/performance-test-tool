@@ -7,7 +7,8 @@ import com.gmail.apachdima.ptt.common.dto.execution.TestExecutionStatusResponseD
 import java.util.Locale;
 
 public interface TestExecutionService {
-    void execute(String executionId, TestExecutionRequestDTO request, String currentUrl, String executedBy, Locale locale);
+    void execute(String simulationId, String executionId, TestExecutionRequestDTO request,
+                 String currentUrl, String executedBy, Locale locale);
     TestExecutionStatusResponseDTO getLatestTestExecutionStatus(String executionId);
     TestExecutionResponseDTO getExecution(String executionId, Locale locale);
 }

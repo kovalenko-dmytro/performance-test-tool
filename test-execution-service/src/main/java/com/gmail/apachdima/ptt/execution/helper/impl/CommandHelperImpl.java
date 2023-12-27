@@ -23,13 +23,13 @@ public class CommandHelperImpl implements CommandHelper {
     private final MessageSource messageSource;
 
     @Override
-    public String prepareCommand(TestExecutionRequestDTO request) {
+    public String prepareCommand(String simulationClass, TestExecutionRequestDTO request) {
         //http://computer-database.gatling.io
         return TestExecutionConstant.BASE_COMMAND.getValue()
             .concat(CommonConstant.SPACE.getValue())
             .concat(TestExecutionConstant.CommandParameter.SIMULATION_CLASS.getValue())
             .concat(CommonConstant.EQUAL.getValue())
-            .concat(request.simulationClass())
+            .concat(simulationClass)
             .concat(CommonConstant.SPACE.getValue())
             .concat(TestExecutionConstant.CommandParameter.BASE_URL.getValue())
             .concat(CommonConstant.EQUAL.getValue())
